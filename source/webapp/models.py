@@ -19,6 +19,10 @@ class Quote(models.Model):
                               choices=STATUS_CHOICES, default=DEFAULT_STATUS)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создано')
 
+    @classmethod
+    def get_moderated(cls):
+        return cls.objects.filter(status=STATUS_MODERATED)
+
     def __str__(self):
         return f'{self.text[:20]}'
 
