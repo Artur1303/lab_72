@@ -19,6 +19,19 @@ class Quote(models.Model):
                               choices=STATUS_CHOICES, default=DEFAULT_STATUS)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создано')
 
+
+    def quenti(self):
+        rating = 0
+        for i in self.votes.all():
+            rating += i.rating
+        self.rating = rating
+        self.save()
+        return rating
+
+
+
+
+
     @classmethod
     def get_moderated(cls):
         return cls.objects.filter(status=STATUS_MODERATED)
@@ -35,7 +48,7 @@ class Vote(models.Model):
     session_key = models.CharField(max_length=40, verbose_name='Ключ сессии')
     quote = models.ForeignKey(Quote, related_name='votes', on_delete=models.CASCADE,
                               verbose_name='Цитата')
-    rating = models.IntegerField(choices=((1, 'up'), (-1, 'down')), verbose_name='Рейтинг')
+    rating = models.IntegerField(choices=((1, 'up'), (-1, 'down')), verbose_name='Рейтинг', null=True)
 
     def __str__(self):
         return f'{self.rating} {self.quote}'
